@@ -12,7 +12,7 @@ Enable plugins in **Settings → Plugins**, then install from npm:
 paseo plugin add npm:@yannelli/paseo-prompt-manager
 ```
 
-The plugin requires Paseo `0.11.0-beta.3` or later on the daemon and on each app that shows it. Git sync also requires Git on the daemon host.
+The plugin requires Paseo `0.16.0` or later on the daemon and on each app that shows it. Git sync also requires Git on the daemon host.
 
 For Paseo 0.9 and 0.10, install release 0.2.0 with `paseo plugin add npm:@yannelli/paseo-prompt-manager@0.2.0`. For Paseo 0.8, install 0.2.0 from Git with `paseo plugin add yannelli/paseo-prompt-manager --ref v0.2.0`.
 
@@ -20,7 +20,7 @@ Open **Prompts** in the sidebar to manage your library. Paseo provides the plugi
 
 ## Use prompts with agents
 
-- Choose **Prompts** in the agent composer bar to search saved prompts. Each result shows the title and up to four preview lines. Choose a result to send that prompt to the agent. The button shows after the agent starts.
+- Choose **Prompts** in the agent composer bar to search saved prompts. Each result shows the title and up to four preview lines. Choose a result to insert it into the composer at the cursor, keeping any draft. Nothing is sent until you press send. The button shows after the agent starts.
 - Choose **Prompts** in the workspace header to search saved prompts and copy one to the clipboard. It also shows on a **New Agent** tab, where you paste the prompt into the first message.
 - In the composer attachment menu, choose **Saved prompt**. Search by title, filename, or words in the prompt, then attach it to your message.
 - Submit `/prompts` in an agent composer to open the prompt panel.

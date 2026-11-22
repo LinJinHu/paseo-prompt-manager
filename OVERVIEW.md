@@ -1,10 +1,10 @@
 Prompt Manager keeps a library of Markdown prompts on the machine that runs the Paseo daemon, with search, folders, tags, and a **Prompts** item in the sidebar. The library is shared by all clients and agents of that daemon. Each save keeps a full snapshot of the prompt, and you can view a snapshot and restore it as a new version.
 
-A prompt is sent to an agent only when you choose it, from the composer, an attachment, or a slash command. The agent receives the prompt body. A prompt can contain variables such as `{{ module }}` or `{{ person | me }}`; choosing it from the **Prompts** button or the prompt panel opens a form with one field per variable, prefilled with any default. If a file was edited outside the plugin, saving a stale draft is rejected instead of overwriting it.
+A prompt reaches an agent only when you choose to send it. The **Prompts** button in the composer inserts the prompt at the cursor and sends nothing; you press send. The prompt panel, an attachment, and `/prompt` send it. The agent receives the prompt body. A prompt can contain variables such as `{{ module }}` or `{{ person | me }}`; choosing it from the **Prompts** button or the prompt panel opens a form with one field per variable, prefilled with any default. If a file was edited outside the plugin, saving a stale draft is rejected instead of overwriting it.
 
 ## Setup
 
-Prompt Manager requires Paseo 0.11.0-beta.3 or later on the daemon and on each app that shows it. Local use needs no other setup.
+Prompt Manager requires Paseo 0.16.0 or later on the daemon and on each app that shows it. Local use needs no other setup.
 
 Git sync is optional. It needs:
 

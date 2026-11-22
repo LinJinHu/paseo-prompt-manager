@@ -11,9 +11,9 @@ Sources:
 
 ## Supported Paseo versions
 
-`paseo-plugin.json` sets `requirements.paseo` to `>=0.11.0-beta.3`. The daemon checks this range before it loads the plugin. Each app checks it before it evaluates `index.client.tsx`, so an app older than 0.11 does not show the plugin UI.
+`paseo-plugin.json` sets `requirements.paseo` to `>=0.16.0`. The daemon checks this range before it loads the plugin. Each app checks it before it evaluates `index.client.tsx`, so an app older than 0.16 does not show the plugin UI.
 
-`package.json` pins `@getpaseo/plugin` to `0.11.0-beta.3`. `npm run typecheck` checks the code against the minimum supported SDK.
+`package.json` pins `@getpaseo/plugin` and `@getpaseo/cli` to `0.16.0`. `npm run typecheck` checks the code against the minimum supported SDK.
 
 ## API availability
 
@@ -21,11 +21,12 @@ Sources:
 | --- | --- | --- |
 | `addScreen`, `addSidebarHeaderItem`, `openScreen`, `SidebarRow` | SDK 0.11.0-beta.1 through 0.11.0-beta.4; absent in 0.10.3 | Library screen, sidebar row, and Command Center item |
 | `addSurface`, `addSidebarItem`, `openSurface` | SDK 0.8.0-beta.1 through 0.11.0-beta.4; `@deprecated` in 0.11 | Removed; release `v0.2.0` uses them |
-| `addComposerPill` with `popover` behavior | SDK 0.10.3 and 0.11.0-beta.3 | **Prompts** pill in each agent composer |
+| `addComposerPill` with `popover` behavior | SDK 0.10.3 through 0.16.0 | **Prompts** pill in each agent composer |
+| `composers(selector)`, `PluginComposer.insertText`, `PluginComposer.focus` | SDK 0.16.0-beta.1 and later; absent in 0.15.4 | **Prompts** pill inserts the chosen prompt at the composer cursor instead of sending it |
 | `addHeaderButton` with `popover` behavior, `copyText` | SDK 0.11.0-beta.3 and 0.11.2 | **Prompts** header button in each workspace, which copies a prompt |
 | Manifest `description` | Daemon 0.9.2 and 0.10.3; rejected by 0.8.0-beta.1 | Summary in Settings → Plugins |
 
-Checked against the published `@getpaseo/plugin` type declarations for 0.8.0-beta.1, 0.9.2, 0.10.3, and 0.11.0-beta.1 through 0.11.0-beta.4. The `@getpaseo/server` manifest schema for 0.8.0-beta.1 rejects unknown keys, including `description`; 0.9.2 and 0.10.3 accept it.
+Checked against the published `@getpaseo/plugin` type declarations for 0.8.0-beta.1, 0.9.2, 0.10.3, 0.11.0-beta.1 through 0.11.0-beta.4, and 0.12.0 through 0.17.0. The `@getpaseo/server` manifest schema for 0.8.0-beta.1 rejects unknown keys, including `description`; 0.9.2 and 0.10.3 accept it.
 
 ## When to update this note
 

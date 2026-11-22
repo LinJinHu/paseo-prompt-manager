@@ -1,11 +1,11 @@
 appId: sh.paseo
 ---
 - runFlow: lib/open-agent.yaml
-- tapOn: Send a saved prompt
+- tapOn: Insert a saved prompt
 - extendedWaitUntil:
-    visible: Send Clean up
+    visible: Insert Clean up
     timeout: 30000
-- tapOn: Send Clean up
+- tapOn: Insert Clean up
 # The picker turns into a form with one field per variable; person keeps its default, me.
 - extendedWaitUntil:
     visible: Value for module
@@ -19,15 +19,15 @@ appId: sh.paseo
 - pressKey: Enter
 - waitForAnimationToEnd
 - extendedWaitUntil:
-    visible: Send filled prompt
+    visible: Insert filled prompt
     timeout: 15000
 - takeScreenshot: variables-filled
-- tapOn: Send filled prompt
-# The runner checks what the agent received; the sent message in the timeline stays.
+- tapOn: Insert filled prompt
+# The runner checks that nothing was sent; the filled text stays in the composer.
 - extendedWaitUntil:
-    notVisible: Send filled prompt
+    notVisible: Insert filled prompt
     timeout: 20000
 - extendedWaitUntil:
     visible: ".*Take a look at server/git\\.ts, remove dead code, and assign the review to me\\..*"
     timeout: 30000
-- takeScreenshot: variables-sent
+- takeScreenshot: variables-inserted

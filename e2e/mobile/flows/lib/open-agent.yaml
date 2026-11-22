@@ -16,13 +16,13 @@ appId: sh.paseo
 - runFlow: open-agent-link.yaml
 # A deep link that arrives before the host reconnects lands on the home screen. Open it again.
 - extendedWaitUntil:
-    visible: Send a saved prompt
+    visible: Insert a saved prompt
     timeout: 30000
     optional: true
 - runFlow:
     when:
-      notVisible: Send a saved prompt
+      notVisible: Insert a saved prompt
     file: open-agent-link.yaml
 - extendedWaitUntil:
-    visible: Send a saved prompt
+    visible: Insert a saved prompt
     timeout: 60000

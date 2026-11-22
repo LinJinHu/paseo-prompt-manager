@@ -11,19 +11,20 @@ test.describe("phone layout", () => {
       await library.seed(`step-${String(index).padStart(2, "0")}`, { content: `# Step ${index}\n\nLine one.\nLine two.\nLine three.` });
     }
     await app.openAgent(agent.id);
-    await app.host.button("Send a saved prompt").click();
-    await expect(app.picker.button("Send Step 1")).toBeVisible();
+    await app.host.button("Insert a saved prompt").click();
+    await expect(app.picker.button("Insert Step 1")).toBeVisible();
 
     // Regression for #9: the host sized the sheet to a nested list and left it a few rows tall.
     const viewport = app.page.viewportSize()!;
     const picker = (await app.picker.root.boundingBox())!;
     expect(picker.height).toBeGreaterThan(viewport.height * 0.5);
 
-    const last = app.picker.button("Send Step 12");
+    const last = app.picker.button("Insert Step 12");
     await last.scrollIntoViewIfNeeded();
     await expect(last).toBeInViewport();
     await last.click();
-    await expect.poll(() => receivedTexts(agent)).toEqual(["Ready for a saved prompt.", "# Step 12\n\nLine one.\nLine two.\nLine three."]);
+    await expect(app.composer()).toHaveValue("# Step 12\n\nLine one.\nLine two.\nLine three.");
+    expect(await receivedTexts(agent)).toEqual(["Ready for a saved prompt."]);
   });
 
   test("shows the library header only on the list", async ({ app, library }) => {

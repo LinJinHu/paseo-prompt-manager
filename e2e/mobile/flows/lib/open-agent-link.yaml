@@ -11,7 +11,7 @@ appId: sh.paseo
       - repeat:
           times: 12
           while:
-            notVisible: Send a saved prompt
+            notVisible: Insert a saved prompt
           commands:
             - runFlow:
                 when:
@@ -19,6 +19,6 @@ appId: sh.paseo
                 commands:
                   - tapOn: Open
             - extendedWaitUntil:
-                visible: Send a saved prompt
+                visible: Insert a saved prompt
                 timeout: 5000
                 optional: true

@@ -205,12 +205,12 @@ describe(`Prompt manager on ${platform}`, () => {
       await library.seed("writing/summary", { content: SUMMARY });
     };
 
-    scenario("the composer pill searches and sends a saved prompt", async ({ library, flow, agent }) => {
+    scenario("the composer pill searches and inserts a saved prompt without sending it", async ({ library, flow, agent }) => {
       await seed(library);
       const target = await agent();
       await flow("agent-pill.yaml");
-      await eventually(() => receivedTexts(target), (texts) => texts.length >= 2, "the agent did not receive the prompt");
-      assert.deepEqual(await receivedTexts(target), [READY, CODE_REVIEW]);
+      // The flow asserts the text is in the composer; nothing reached the agent.
+      assert.deepEqual(await receivedTexts(target), [READY]);
     });
 
     scenario("/prompt sends a saved prompt by ID", async ({ library, flow, agent }) => {
@@ -230,12 +230,12 @@ describe(`Prompt manager on ${platform}`, () => {
     });
 
     // The title contains "composer pill", so the iOS agent shard picks it up.
-    scenario("the composer pill fills in a prompt's variables before sending", async ({ library, flow, agent }) => {
+    scenario("the composer pill fills in a prompt's variables before inserting", async ({ library, flow, agent }) => {
       await library.seed("clean-up", { content: "# Clean up\n\nTake a look at {{ module }}, remove dead code, and assign the review to {{ person | me }}." });
       const target = await agent();
       await flow("agent-variables.yaml");
-      await eventually(() => receivedTexts(target), (texts) => texts.length >= 2, "the agent did not receive the prompt");
-      assert.deepEqual(await receivedTexts(target), [READY, "# Clean up\n\nTake a look at server/git.ts, remove dead code, and assign the review to me."]);
+      // The flow asserts the filled text is in the composer; nothing reached the agent.
+      assert.deepEqual(await receivedTexts(target), [READY]);
     });
 
     scenario("Attach Saved prompt adds the prompt to a message", async ({ library, flow, agent }) => {
@@ -265,8 +265,8 @@ describe(`Prompt manager on ${platform}`, () => {
       assert.ok(picker.bottom - picker.top > screen.height * 0.5, `picker is ${picker.bottom - picker.top}px tall on a ${screen.height}px screen`);
 
       await flow("mobile-picker-last.yaml");
-      await eventually(() => receivedTexts(target), (texts) => texts.length >= 2, "the agent did not receive Step 12");
-      assert.deepEqual(await receivedTexts(target), [READY, "# Step 12\n\nLine one.\nLine two.\nLine three."]);
+      // The flow asserts the text is in the composer; nothing reached the agent.
+      assert.deepEqual(await receivedTexts(target), [READY]);
     });
 
     scenario("the focused editor field stays above the keyboard", async ({ library, flow }) => {

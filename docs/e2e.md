@@ -28,7 +28,7 @@ All workflows run on pull requests and on pushes to `main` and `beta`. Results, 
 - relay, dictation, and voice off;
 - `prompt-e2e`, an ACP provider that runs `e2e/harness/recording-agent.mjs`.
 
-The recording agent writes every prompt it receives to `.received.jsonl` in the agent's working directory. `receivedTexts()` and `receivedPrompts()` in `e2e/harness/library.ts` read it, so a test can check the text the composer pill, slash commands, agent panel, and attachments actually delivered.
+The recording agent writes every prompt it receives to `.received.jsonl` in the agent's working directory. `receivedTexts()` and `receivedPrompts()` in `e2e/harness/library.ts` read it, so a test can check the text slash commands, the agent panel, and attachments actually delivered, and that the composer pill sent nothing.
 
 `TestLibrary` gives each test an empty library directory and points the plugin at it. The plugin reads its settings file on every request, so tests can share one daemon.
 
@@ -111,10 +111,10 @@ Every client covers:
 - importing from paths on the host;
 - changing the library directory;
 - Git sync set up and Sync now against a local bare repository;
-- sending a prompt from the composer pill, `/prompt <id>`, and the `/prompts` agent panel;
+- inserting a prompt from the composer pill, and sending with `/prompt <id>` and the `/prompts` agent panel;
 - copying a prompt from the workspace header button (web and desktop);
 - attaching a saved prompt to a message;
-- filling in a prompt's variables, prefilled with defaults, from the composer pill. Web and desktop also cover the header button, the agent panel, `/prompt` with and without defaults, and code braces sent as written.
+- filling in a prompt's variables, prefilled with defaults, from the composer pill. Web and desktop also cover the header button, the agent panel, `/prompt` with and without defaults, and code braces inserted as written.
 
 The wide web and desktop clients also cover both Command Center items, and the web client covers the browser file picker. The phone layouts (web phone, Android, iOS) also check the issue #9 fixes: the picker sheet opens at most of the screen height and reaches its last result, and the library header shows only on the list. Android and iOS also check that the focused field stays above the keyboard and that **Done** in the expanded editor hides the keyboard.
 

@@ -7,8 +7,8 @@ import { Button, Field, inputStyle, type Colors } from "./ui";
 type Props = {
   content: string;
   colors: Colors;
-  /** "Send" or "Copy"; the button also reads "<action> filled prompt" to screen readers. */
-  action: "Send" | "Copy";
+  /** What the button does with the filled prompt; it also reads "<action> filled prompt" to screen readers. */
+  action: "Send" | "Copy" | "Insert";
   busy?: boolean;
   onSubmit: (text: string) => void;
   onCancel: () => void;
@@ -30,10 +30,11 @@ export function VariableForm({ content, colors, action, busy, onSubmit, onCancel
   const missing = variables.some((variable) => variable.fallback === undefined && !values[variable.name]?.trim());
   const submit = () => !missing && !busy && onSubmit(fillTemplate(content, values));
   const input = inputStyle(colors);
+  const actionIcon = action === "Send" ? "Send" : action === "Copy" ? "Copy" : "TextCursorInput";
   const actions = (
     <>
       <Button title={cancelLabel} onPress={onCancel} colors={colors} disabled={busy} size={title ? "sm" : "md"} />
-      <Button title={action} icon={action === "Send" ? "Send" : "Copy"} variant="primary" onPress={submit} colors={colors} disabled={busy || missing} size={title ? "sm" : "md"} accessibilityLabel={`${action} filled prompt`} />
+      <Button title={action} icon={actionIcon} variant="primary" onPress={submit} colors={colors} disabled={busy || missing} size={title ? "sm" : "md"} accessibilityLabel={`${action} filled prompt`} />
     </>
   );
   return (
