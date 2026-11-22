@@ -7,6 +7,15 @@
 - Node v24.21.0（插件要求 ≥24）
 - npm 11.19.0
 - Playwright Chromium 已装好，可直接跑端到端测试
+- 本机 shell 可能带着 `PASEO_WORKSPACE_ID`，跑端到端前要清掉：`env -u PASEO_WORKSPACE_ID -u PASEO_AGENT_ID -u PASEO_AGENT_CWD -u PASEO_HOME`
+- 本机 `NODE_ENV=production`，装依赖要加 `--include=dev`，否则开发依赖会被跳过
+
+## 版本升级（阶段 0 发现）
+
+"填进输入框"依赖 Paseo 的输入框接口（`composers` / `insertText` / `focus`），0.15 及以前的 SDK 没有。实测 0.16.0-beta.1 起才有。
+
+- `paseo-plugin.json`：`requirements.paseo` 从 `>=0.11.0-beta.3` 改为 `>=0.16.0`。
+- `package.json`：`@getpaseo/plugin` 和 `@getpaseo/cli` 从 `0.11.0-beta.3` / `0.11.1` 改为 `0.16.0`（按仓库惯例，依赖固定为最低支持版本，让 typecheck 校验下限）。
 
 ## 工程原则选择
 
@@ -20,11 +29,12 @@
 
 ## 阶段 0：建立基线
 
-- `npm ci` 装依赖。
-- `npm run check`（类型检查 + 单测）确认全绿。
-- 跑 web 端到端里跟 composer pill 相关的 3 个用例，记录当前"点选即发送"的行为作对照。
+- 装依赖（`npm ci --include=dev`）。
+- `npm run check`（类型检查 + 单测）确认全绿：77 个单测通过。
+- 升 Paseo SDK 到 0.16.0，再跑 typecheck + 单测：仍 77 个通过。
+- 跑 web 端到端里跟 composer pill 相关的 3 个用例，记录当前"点选即发送"的行为作对照：3 个通过。
 
-检查点：check 全绿、相关 e2e 用例当前通过。
+检查点：check 全绿、相关 e2e 用例当前通过。（已达成）
 
 ## 阶段 1：核心行为改动（`client/pill.tsx` + `client/variables.tsx`）
 
