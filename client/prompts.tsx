@@ -19,6 +19,7 @@ import {
   openSync, readPrompt, readVersion, restoreVersion, savePrompt, saveSettings, syncGit,
   type Prompt, type SyncMode,
 } from "../shared/prompts";
+import { promptBody } from "../shared/markdown";
 import { describeVariable, fillTemplate, parseVariables } from "../shared/templates";
 
 const FRESH_MS = 30_000;
@@ -229,8 +230,9 @@ export function PromptLibrary({ theme, layout, agentId }: Props) {
   const sendToAgent = () => run(async () => {
     const saved = await readRpc({ id: current!.id });
     if (saved.archived) throw new Error("This prompt is archived. Restore it before sending.");
-    if (parseVariables(saved.content).length) return setFilling(saved.content);
-    await paseo.agents.ref(agentId!).send(fillTemplate(saved.content, {}));
+    const body = promptBody(saved.content);
+    if (parseVariables(body).length) return setFilling(body);
+    await paseo.agents.ref(agentId!).send(fillTemplate(body, {}));
     success("Prompt sent to this agent.");
   });
   const sendFilled = (text: string) => run(async () => {

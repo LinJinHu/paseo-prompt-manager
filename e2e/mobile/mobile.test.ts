@@ -16,6 +16,8 @@ const execute = promisify(execFile);
 const READY = "Ready for a saved prompt.";
 const CODE_REVIEW = "# Code review\n\nReview the diff for bugs, missing tests, and unclear names.";
 const SUMMARY = "# Summary\n\nSummarize this thread in three bullets.";
+const CODE_REVIEW_BODY = "Review the diff for bugs, missing tests, and unclear names.";
+const SUMMARY_BODY = "Summarize this thread in three bullets.";
 
 let daemon: TestDaemon;
 const pattern = process.env.PROMPT_E2E_PATTERN ? new RegExp(process.env.PROMPT_E2E_PATTERN, "i") : null;
@@ -218,7 +220,7 @@ describe(`Prompt manager on ${platform}`, () => {
       const target = await agent();
       await flow("agent-slash-prompt.yaml");
       await eventually(() => receivedTexts(target), (texts) => texts.length >= 2, "the agent did not receive the prompt");
-      assert.deepEqual(await receivedTexts(target), [READY, SUMMARY]);
+      assert.deepEqual(await receivedTexts(target), [READY, SUMMARY_BODY]);
     });
 
     scenario("/prompts opens the panel, which sends the selected prompt", async ({ library, flow, agent }) => {
@@ -226,7 +228,7 @@ describe(`Prompt manager on ${platform}`, () => {
       const target = await agent();
       await flow("agent-slash-prompts.yaml");
       await eventually(() => receivedTexts(target), (texts) => texts.length >= 2, "the agent did not receive the prompt");
-      assert.deepEqual(await receivedTexts(target), [READY, CODE_REVIEW]);
+      assert.deepEqual(await receivedTexts(target), [READY, CODE_REVIEW_BODY]);
     });
 
     // The title contains "composer pill", so the iOS agent shard picks it up.

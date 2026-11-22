@@ -2,11 +2,14 @@ import { receivedPrompts, receivedTexts } from "../harness/library.ts";
 import { expect, test } from "./fixtures.ts";
 
 const CODE_REVIEW = "# Code review\n\nReview the diff for bugs, missing tests, and unclear names.";
+const CODE_BODY = "Review the diff for bugs, missing tests, and unclear names.";
+const SUMMARY = "# Summary\n\nSummarize this thread in three bullets.";
+const SUMMARY_BODY = "Summarize this thread in three bullets.";
 
 test.describe("sending prompts to agents", () => {
   test.beforeEach(async ({ library }) => {
     await library.seed("code-review", { content: CODE_REVIEW, description: "Pre-merge review", tags: ["review"] });
-    await library.seed("writing/summary", { content: "# Summary\n\nSummarize this thread in three bullets." });
+    await library.seed("writing/summary", { content: SUMMARY });
   });
 
   test("composer pill searches and inserts a saved prompt without sending it", async ({ app, agent }) => {
@@ -23,7 +26,7 @@ test.describe("sending prompts to agents", () => {
 
     await app.toast(/Inserted "Code review"\./);
     await expect(app.picker.root).toBeHidden();
-    await expect(app.composer()).toHaveValue(CODE_REVIEW);
+    await expect(app.composer()).toHaveValue(CODE_BODY);
     expect(await receivedTexts(agent)).toEqual(["Ready for a saved prompt."]);
   });
 
@@ -34,7 +37,7 @@ test.describe("sending prompts to agents", () => {
     await app.picker.field("Search saved prompts").fill("review");
     await app.picker.button("Insert Code review").click();
 
-    await expect(app.composer()).toHaveValue(`Note: ${CODE_REVIEW}`);
+    await expect(app.composer()).toHaveValue(`Note: ${CODE_BODY}`);
     expect(await receivedTexts(agent)).toEqual(["Ready for a saved prompt."]);
   });
 
@@ -56,7 +59,7 @@ test.describe("sending prompts to agents", () => {
     await app.openAgent(agent.id);
     await app.composer().fill("/prompt writing/summary");
     await app.host.button("Send message").click();
-    await expect.poll(() => receivedTexts(agent)).toEqual(["Ready for a saved prompt.", "# Summary\n\nSummarize this thread in three bullets."]);
+    await expect.poll(() => receivedTexts(agent)).toEqual(["Ready for a saved prompt.", SUMMARY_BODY]);
   });
 
   test("/prompt reports unknown and archived prompts without sending", async ({ app, agent, library }) => {
@@ -84,7 +87,7 @@ test.describe("sending prompts to agents", () => {
     await expect(app.text("Save instructions and send them to this agent.")).toBeVisible();
     await app.openPrompt("Code review");
     await app.button("Send saved prompt to agent").click();
-    await expect.poll(() => receivedTexts(agent)).toEqual(["Ready for a saved prompt.", CODE_REVIEW]);
+    await expect.poll(() => receivedTexts(agent)).toEqual(["Ready for a saved prompt.", CODE_BODY]);
   });
 
   test("the attachment menu attaches a saved prompt to a message", async ({ app, agent }) => {
@@ -105,6 +108,7 @@ test.describe("sending prompts to agents", () => {
   test.describe("prompts with variables", () => {
     const TEMPLATE = "# Clean up\n\nTake a look at {{ module }}, remove dead code, and assign the review to {{ person | me }}.";
     const filled = (module: string, person: string) => `# Clean up\n\nTake a look at ${module}, remove dead code, and assign the review to ${person}.`;
+    const filledBody = (module: string, person: string) => `Take a look at ${module}, remove dead code, and assign the review to ${person}.`;
 
     test.beforeEach(async ({ library }) => {
       await library.seed("clean-up", { content: TEMPLATE });
@@ -125,7 +129,7 @@ test.describe("sending prompts to agents", () => {
 
       await app.toast(/Inserted "Clean up"\./);
       await expect(app.picker.root).toBeHidden();
-      await expect(app.composer()).toHaveValue(filled("server/git.ts", "me"));
+      await expect(app.composer()).toHaveValue(filledBody("server/git.ts", "me"));
       expect(await receivedTexts(agent)).toEqual(["Ready for a saved prompt."]);
     });
 
@@ -166,7 +170,7 @@ test.describe("sending prompts to agents", () => {
       await app.openAgent(agent.id);
       await app.composer().fill("/prompt assign");
       await app.host.button("Send message").click();
-      await expect.poll(() => receivedTexts(agent)).toEqual(["Ready for a saved prompt.", "# Assign\n\nAssign the review to me."]);
+      await expect.poll(() => receivedTexts(agent)).toEqual(["Ready for a saved prompt.", "Assign the review to me."]);
     });
 
     test("braces in code and escaped braces are inserted as written, in one tap", async ({ app, agent, library }) => {
@@ -178,7 +182,7 @@ test.describe("sending prompts to agents", () => {
       await app.picker.button("Insert React").click();
 
       await app.toast(/Inserted "React"\./);
-      await expect(app.composer()).toHaveValue(content.replace("\\{{", "{{"));
+      await expect(app.composer()).toHaveValue(content.slice("# React\n\n".length).replace("\\{{", "{{"));
       expect(await receivedTexts(agent)).toEqual(["Ready for a saved prompt."]);
     });
 
@@ -198,7 +202,7 @@ test.describe("sending prompts to agents", () => {
       await app.host.field("Value for module").fill("shared/");
       await app.host.button("Send filled prompt").click();
       await app.toast("Prompt sent to this agent.");
-      await expect.poll(() => receivedTexts(agent)).toEqual(["Ready for a saved prompt.", filled("shared/", "me")]);
+      await expect.poll(() => receivedTexts(agent)).toEqual(["Ready for a saved prompt.", filledBody("shared/", "me")]);
     });
   });
 

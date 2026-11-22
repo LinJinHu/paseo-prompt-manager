@@ -4,7 +4,7 @@ import { copyText, Icon, ScrollView, TextInput, useToast } from "@getpaseo/plugi
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
-import { previewLines } from "../shared/markdown";
+import { previewLines, promptBody } from "../shared/markdown";
 import { searchPrompts } from "../shared/prompts";
 import { fillTemplate, parseVariables } from "../shared/templates";
 import { inputStyle, radius, useDebounced } from "./ui";
@@ -42,9 +42,11 @@ function PromptPicker({ theme, layout, close, composers, ...target }: PluginButt
   const items = results.data?.items.slice(0, RESULT_LIMIT) ?? [];
   // Prompts without variables still go through fillTemplate, which turns `\{{ name }}` into literal braces.
   const choose = (item: { id: string; title: string; text: string }) => {
-    if (!parseVariables(item.text).length) return apply.mutate({ title: item.title, text: fillTemplate(item.text, {}) });
+    // The header button copies the prompt as saved, title heading included.
+    const text = copy ? item.text : promptBody(item.text);
+    if (!parseVariables(text).length) return apply.mutate({ title: item.title, text: fillTemplate(text, {}) });
     apply.reset();
-    setFilling(item);
+    setFilling({ ...item, text });
   };
   const muted = { color: colors.foregroundMuted, fontSize: 12 };
   const rows = items.map((item) => (

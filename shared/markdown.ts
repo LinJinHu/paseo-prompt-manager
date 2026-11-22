@@ -154,6 +154,15 @@ export function splitCode(content: string): CodeSplit[] {
   return parts;
 }
 
+/** The prompt text sent to an agent: the content without the heading that names it and the blank lines after it. */
+export function promptBody(content: string): string {
+  // Blank lines may come first. A heading is indented by at most three spaces, as Markdown reads it.
+  const heading = /^(?:[ \t]*\r?\n)*[ \t]{0,3}#{1,6}[ \t]+[^\n]*(?:\r?\n|$)/.exec(content);
+  if (!heading) return content;
+  const rest = content.slice(heading[0].length).replace(/^[ \t]*(?:\r?\n)+/, "");
+  return rest.trim() ? rest : content;
+}
+
 export function previewLines(content: string, limit = 4) {
   const blocks = parseMarkdown(content);
   const heading = blocks.findIndex((block) => block.kind === "heading");

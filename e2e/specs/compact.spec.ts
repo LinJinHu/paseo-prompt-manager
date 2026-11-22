@@ -23,7 +23,7 @@ test.describe("phone layout", () => {
     await last.scrollIntoViewIfNeeded();
     await expect(last).toBeInViewport();
     await last.click();
-    await expect(app.composer()).toHaveValue("# Step 12\n\nLine one.\nLine two.\nLine three.");
+    await expect(app.composer()).toHaveValue("Line one.\nLine two.\nLine three.");
     expect(await receivedTexts(agent)).toEqual(["Ready for a saved prompt."]);
   });
 

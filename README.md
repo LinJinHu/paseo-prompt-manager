@@ -21,6 +21,7 @@ Open **Prompts** in the sidebar to manage your library. Paseo provides the plugi
 ## Use prompts with agents
 
 - Choose **Prompts** in the agent composer bar to search saved prompts. Each result shows the title and up to four preview lines. Choose a result to insert it into the composer at the cursor, keeping any draft. Nothing is sent until you press send. The button shows after the agent starts.
+- The heading that names a prompt labels it in the library. It is not part of the prompt that reaches the agent. The **Prompts** button, **Send to agent**, and `/prompt` send the text after that heading. Headings inside the text stay.
 - Choose **Prompts** in the workspace header to search saved prompts and copy one to the clipboard. It also shows on a **New Agent** tab, where you paste the prompt into the first message.
 - In the composer attachment menu, choose **Saved prompt**. Search by title, filename, or words in the prompt, then attach it to your message.
 - Submit `/prompts` in an agent composer to open the prompt panel.

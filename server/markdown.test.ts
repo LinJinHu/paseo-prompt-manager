@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { parseInlineMarkdown, parseMarkdown, previewLines, splitCode } from "../shared/markdown.ts";
+import { parseInlineMarkdown, parseMarkdown, previewLines, promptBody, splitCode } from "../shared/markdown.ts";
 
 test("preview recognizes headings, lists, tasks, quotes and rules", () => {
   assert.deepEqual(parseMarkdown("# Review\r\n\r\nRead first.\r\n- [ ] Inspect\r\n  1. Test\r\n- [x] Save\r\n> Keep changes small\r\n> Explain failures\r\n\r\n---"), [
@@ -97,4 +97,32 @@ test("code splits out as Preview reads it and joins back into the content", () =
   const parts = splitCode(content);
   assert.equal(parts.map((part) => part.text).join(""), content);
   assert.deepEqual(parts.filter((part) => part.code).map((part) => part.text), ["`b`", "``d e``", "```sh\nf\n```\n"]);
+});
+
+test("the heading that names a prompt is not part of its body", () => {
+  assert.equal(promptBody("# Review\n\nRead first."), "Read first.");
+});
+
+test("any heading level names a prompt, and only the first one is removed", () => {
+  assert.equal(promptBody("## PR review\n\nCheck the diff."), "Check the diff.");
+  assert.equal(promptBody("###### Tiny\n\nStill the body."), "Still the body.");
+  assert.equal(promptBody("# Title\n\nIntro.\n\n## Keep this\n\nMore."), "Intro.\n\n## Keep this\n\nMore.");
+});
+
+test("a prompt without a leading heading keeps all of its text", () => {
+  assert.equal(promptBody("Just the body."), "Just the body.");
+  assert.equal(promptBody("Intro.\n\n# Later heading"), "Intro.\n\n# Later heading");
+});
+
+test("a prompt that is only a heading keeps its text", () => {
+  assert.equal(promptBody("# Only a title"), "# Only a title");
+  assert.equal(promptBody("# Only a title\n\n   "), "# Only a title\n\n   ");
+});
+
+test("blank lines before the heading are skipped and CRLF is accepted", () => {
+  assert.equal(promptBody("\n\n# Title\n\r\nBody line.\r\n"), "Body line.\r\n");
+});
+
+test("a line indented as a code block is not a heading", () => {
+  assert.equal(promptBody("    # Code, not a title\n\nBody."), "    # Code, not a title\n\nBody.");
 });
